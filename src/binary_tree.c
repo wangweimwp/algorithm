@@ -89,6 +89,56 @@ struct binary_tree_node *binary_tree_dele(struct binary_tree_node *root, unsigne
 	return root;
 
 }
+void binary_perergodic(struct binary_tree_node *root)
+{
+	if(root == NULL)
+		return;
+	printf("key = %d, data = %s\n", root->key, root->data);
+
+	if(root->left != NULL){
+		binary_perergodic(root->left);
+	}
+	if(root->right != NULL){
+		binary_perergodic(root->right);
+	}
+	return;
+}
+
+void binary_midergodic(struct binary_tree_node *root)
+{
+	if(root == NULL)
+		return;
+
+	if(root->left != NULL){
+		binary_perergodic(root->left);
+	}
+
+	printf("key = %d, data = %s\n", root->key, root->data);
+	
+	if(root->right != NULL){
+		binary_perergodic(root->right);
+	}
+	return;
+}
+
+void binary_bakergodic(struct binary_tree_node *root)
+{
+	if(root == NULL)
+		return;
+
+	if(root->left != NULL){
+		binary_perergodic(root->left);
+	}
+	
+	if(root->right != NULL){
+		binary_perergodic(root->right);
+	}
+
+	printf("key = %d, data = %s\n", root->key, root->data);
+	return;
+}
+
+
 
 void binary_tree_test(void)
 {
@@ -123,6 +173,11 @@ void binary_tree_test(void)
 	binary_tree_put(&root, &node[3]);
 	binary_tree_put(&root, &node[4]);
 	binary_tree_put(&root, &node[5]);
+	binary_perergodic(&root);
+	printf("\n");
+	binary_midergodic(&root);
+	printf("\n");
+	binary_bakergodic(&root);
 
 	printf("%s \n", root.left->data);
 	printf("%s \n", root.right->data);
@@ -132,7 +187,7 @@ void binary_tree_test(void)
 	printf("%s \n", root.right->right->right->data);
 	del_node = binary_tree_dele(&root, 22);
 	printf("after dele %s \n", del_node->right->data);
-
+	binary_perergodic(del_node);
 	printf("%s \n", binary_tree_get(&root, 25));
 }
 
