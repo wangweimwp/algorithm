@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "binary_tree.h"
+#include "list.h"
 
 
 struct binary_tree_node root = {0};
@@ -138,7 +139,29 @@ void binary_bakergodic(struct binary_tree_node *root)
 	return;
 }
 
+void binary_layer_ergodic(struct binary_tree_node *root)
+{
+	struct binary_tree_node *node_p[20] = { 0 };
+	int index1, index2;
+	index1 = 0;
+	index2 = 0;
+	node_p[index1++] = root;
 
+	while(index2 < index1){
+		if(node_p[index2]->left != NULL){
+			node_p[index1++] = node_p[index2]->left;
+		}
+		if(node_p[index2]->right != NULL){
+			node_p[index1++] = node_p[index2]->right;
+		}
+		printf("key = %d, data = %s\n", node_p[index2]->key, node_p[index2]->data);
+		index2++;
+	}
+
+	
+	
+	
+}
 
 void binary_tree_test(void)
 {
@@ -167,17 +190,23 @@ void binary_tree_test(void)
 	node[5].key = 26;
 	node[5].data = "xuhuaqin";
 
+	node[6].key = 18;
+	node[6].data = "hikvision";
 	binary_tree_put(&root, &node[0]);
 	binary_tree_put(&root, &node[1]);
 	binary_tree_put(&root, &node[2]);
 	binary_tree_put(&root, &node[3]);
 	binary_tree_put(&root, &node[4]);
 	binary_tree_put(&root, &node[5]);
+	binary_tree_put(&root, &node[6]);
 	binary_perergodic(&root);
 	printf("\n");
 	binary_midergodic(&root);
 	printf("\n");
 	binary_bakergodic(&root);
+
+	printf("binary_layer_ergodic\n");
+	binary_layer_ergodic(&root);
 
 	printf("%s \n", root.left->data);
 	printf("%s \n", root.right->data);
@@ -189,6 +218,8 @@ void binary_tree_test(void)
 	printf("after dele %s \n", del_node->right->data);
 	binary_perergodic(del_node);
 	printf("%s \n", binary_tree_get(&root, 25));
+	printf("binary_layer_ergodic\n");
+	binary_layer_ergodic(&root);
 }
 
 
