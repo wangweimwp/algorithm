@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "binary_tree.h"
 #include "list.h"
+#include <malloc.h> 
+
 
 
 struct binary_tree_node root = {0};
@@ -111,13 +113,13 @@ void binary_midergodic(struct binary_tree_node *root)
 		return;
 
 	if(root->left != NULL){
-		binary_perergodic(root->left);
+		binary_midergodic(root->left);
 	}
 
 	printf("key = %d, data = %s\n", root->key, root->data);
 	
 	if(root->right != NULL){
-		binary_perergodic(root->right);
+		binary_midergodic(root->right);
 	}
 	return;
 }
@@ -128,11 +130,11 @@ void binary_bakergodic(struct binary_tree_node *root)
 		return;
 
 	if(root->left != NULL){
-		binary_perergodic(root->left);
+		binary_bakergodic(root->left);
 	}
 	
 	if(root->right != NULL){
-		binary_perergodic(root->right);
+		binary_bakergodic(root->right);
 	}
 
 	printf("key = %d, data = %s\n", root->key, root->data);
@@ -148,20 +150,76 @@ void binary_layer_ergodic(struct binary_tree_node *root)
 	node_p[index1++] = root;
 
 	while(index2 < index1){
+		/*如果有左子节点，则把左子节点放入队列*/
 		if(node_p[index2]->left != NULL){
 			node_p[index1++] = node_p[index2]->left;
 		}
+		/*如果有右子节点，则把右子节点放入队列*/
 		if(node_p[index2]->right != NULL){
 			node_p[index1++] = node_p[index2]->right;
 		}
+		/*弹出一个节点*/
 		printf("key = %d, data = %s\n", node_p[index2]->key, node_p[index2]->data);
 		index2++;
 	}
-
-	
-	
-	
 }
+
+static void binary_paper_fold(unsigned int N)
+{
+	struct binary_tree_node root = {0};
+	struct binary_tree_node *tmp_node;
+	struct binary_tree_node *node_p[20] = { 0 };
+	int i;
+	int index1, index2;
+	index1 = 0;
+	index2 = 0;
+
+	for(i = 0; i < N; i++){
+		/*第一次对折*/
+		if(i == 0){
+			root.data = "down";
+			continue;
+		}
+		/*不是第一次对折*/
+		node_p[index1++] = &root;
+		while(index2 < index1){
+			if(node_p[index2]->left != NULL){
+				node_p[index1++] = node_p[index2]->left;
+			}
+			if(node_p[index2]->right != NULL){
+				node_p[index1++] = node_p[index2]->right;
+			}
+			if((node_p[index2]->left == NULL) || (node_p[index2]->right == NULL)){
+				tmp_node =(struct binary_tree_node *) malloc(sizeof(struct binary_tree_node));
+				tmp_node->data = "down";
+				tmp_node->left = NULL;
+				tmp_node->right = NULL;
+				node_p[index2]->left = tmp_node;
+				tmp_node =(struct binary_tree_node *) malloc(sizeof(struct binary_tree_node));
+				tmp_node->data = "up";
+				tmp_node->left = NULL;
+				tmp_node->right = NULL;
+				node_p[index2]->right = tmp_node;
+			}
+			index2++;
+		}
+		
+	}
+	printf("fold %s\n", root.left->right->data);
+
+	binary_midergodic(&root);
+
+	/*释放内存*/
+/*
+	for(i = 1; i < 20; i++){
+		if(node_p[i] != 0){
+			free((void *)node_p[i]);
+			printf("addr = %x\n", node_p[i]);
+		}
+	}
+*/	
+}
+
 
 void binary_tree_test(void)
 {
@@ -220,6 +278,10 @@ void binary_tree_test(void)
 	printf("%s \n", binary_tree_get(&root, 25));
 	printf("binary_layer_ergodic\n");
 	binary_layer_ergodic(&root);
+
+
+	printf("binary_paper_fold\n");
+	binary_paper_fold(3);
 }
 
 
