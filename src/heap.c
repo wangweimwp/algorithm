@@ -19,13 +19,13 @@ static void heap_swim(struct heap_struct *heap)
 	}
 }
 
-static void heap_sink(struct heap_struct *heap, unsigned int k)
+static void heap_sink(struct heap_struct *heap, unsigned int k, unsigned int rang)
 {
 	unsigned max;
 	int tmp;
 
-	while(k < heap->num){
-		if(2 * k + 1 <= heap->num){
+	while(2 * k <= rang){
+		if(2 * k + 1 <= rang){
 			if(heap->heap_p[2 * k] < heap->heap_p[2 * k + 1]){
 				max = 2 * k + 1;
 			}else{
@@ -63,12 +63,38 @@ static void heap_delmax(struct heap_struct *heap)
 
 	heap->num--;
 
-	heap_sink(heap, 1);
+	heap_sink(heap, 1, heap->num);
 
 	return;
 }
 
 
+static void heap_creat(struct heap_struct *heap)
+{
+	int i;
+	int tmp;
+	tmp = heap->num / 2;
+
+	for(i = tmp; i > 0; i--){
+		heap_sink(heap, i, heap->num);
+	}
+
+	return;
+}
+
+static void heap_sort(struct heap_struct *heap)
+{
+	int i;
+	int tmp;
+	i = heap->num;
+
+	while(i > 1){
+		tmp = heap->heap_p[i];
+		heap->heap_p[i] = heap->heap_p[1];
+		heap->heap_p[1] = tmp;
+		heap_sink(heap, 1, --i);
+	}
+}
 
 
 void heap_test(void)
@@ -80,17 +106,20 @@ void heap_test(void)
 	heap.heap_p = arry;
 	heap.num = 0;
 
-	arry[1] = 20;
-	arry[2] = 17;
-	arry[3] = 16;
-	arry[4] = 14;
-	arry[5] = 15;
-	arry[6] = 15;
-	arry[7] = 12;
-	arry[8] = 10;
+	arry[1] = 35;
+	arry[2] = 2;
+	arry[3] = 14;
+	arry[4] = 23;
+	arry[5] = 43;
+	arry[6] = 22;
+	arry[7] = 7;
+	arry[8] = 26;
 	heap.num = 8;
-	heap_insert(&heap, 18);
-	heap_delmax(&heap);
+
+	heap_creat(&heap);
+	heap_insert(&heap, 27);
+	//heap_delmax(&heap);
+	heap_sort(&heap);
 
 	for(i = 1; i < 20; i ++){
 		printf("%d %d\n", i, heap.heap_p[i]);
