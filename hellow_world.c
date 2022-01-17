@@ -2,6 +2,7 @@
 #include "list.h"
 #include "binary_tree.h"
 #include "heap.h"
+#include "red_black_tree.h"
 
 static int max(int a, int b)
 {
@@ -164,8 +165,9 @@ int main()
 	list_reverse_test();
 
 	binary_tree_test();
-	#endif
 	heap_test();
+	#endif
+	red_black_tree_test();
 	return 0;
 }
 

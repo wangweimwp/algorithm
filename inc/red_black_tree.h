@@ -11,8 +11,8 @@ typedef struct red_black_node
 	int key;
 	unsigned char *data;
 	struct red_black_node *left, *right;
-	bool color;
+	int color;
 }rb_node;
 
-
+void red_black_tree_test(void);
 #endif

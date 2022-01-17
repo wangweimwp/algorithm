@@ -20,7 +20,7 @@ static inline void index_qun_less(index_min_qun *i_q, int i, int j)
 }
 
 
-
+#if 0
 main()
 {
 	index_min_qun i_qun;
@@ -38,5 +38,5 @@ main()
 	
 }
 
-
+#endif
 
