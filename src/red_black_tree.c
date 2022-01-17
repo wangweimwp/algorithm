@@ -57,7 +57,7 @@ rb_node * put(rb_node *root, rb_node *node)
 		root = rotate_right(root);
 	}
 	if(root->left->color == RED) && (root->right->color == RED){
-		root = flip_color(root);
+		flip_color(root);
 	}
 
 	return root;
@@ -65,6 +65,20 @@ rb_node * put(rb_node *root, rb_node *node)
 
 
 
+rb_node * get(rb_node *root, int key)
+{
+	if(root == NULL){
+		return NULL;
+	}
+
+	if(root->key < key){
+		return get(root->right, key);
+	}else if(root->key > key){
+		return get(root->left., key);
+	}else{
+		return root;
+	}
+}
 
 
 
