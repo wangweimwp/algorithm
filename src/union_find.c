@@ -3,7 +3,7 @@
 #include "union_find.h"
 
 
-static void uf_init(UF uf_point, int n)
+static void uf_init(UF *uf_point, int n)
 {
 	int i ;
 
@@ -17,18 +17,18 @@ static void uf_init(UF uf_point, int n)
 }
 
 
-static int find(UF uf_point, int p)
+static int find(UF *uf_point, int p)
 {
 	return uf_point->ele_and_group[p];
 }
 
-static int is_connected(UF uf_point, int p, int q)
+static int is_connected(UF *uf_point, int p, int q)
 {
-	return find(p) == find(q);
+	return find(uf_point, p) == find(uf_point, q);
 	
 }
 
-static void union_group(UF uf_point, int p, int q)
+static void union_group(UF *uf_point, int p, int q)
 {
 	int p_group, q_group;
 	int i;
@@ -36,8 +36,8 @@ static void union_group(UF uf_point, int p, int q)
 		return ;
 	}
 
-	p_group = find(p);
-	q_group = find(q);
+	p_group = find(uf_point, p);
+	q_group = find(uf_point, q);
 
 	for(i = 0; i < uf_point->num; i++){
 		if(uf_point->ele_and_group[i] == q_group){
