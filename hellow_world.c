@@ -3,6 +3,10 @@
 #include "binary_tree.h"
 #include "heap.h"
 #include "red_black_tree.h"
+#include "union_find.h"
+#include "graph.h"
+
+
 
 static int max(int a, int b)
 {
@@ -166,8 +170,10 @@ int main()
 
 	binary_tree_test();
 	heap_test();
-	#endif
 	red_black_tree_test();
+	union_find();
+	#endif
+	graph_test();
 	return 0;
 }
 
