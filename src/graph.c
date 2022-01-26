@@ -64,24 +64,27 @@ static void dfs(graph *graph_p, int point)
 
 static void bfs(graph *graph_p, int point)
 {
-/*感觉有问题，和深度优先搜索逻辑一样*/
 	int tmp = 0;
 	int i;
 	graph_p->bfs.marked[point] = 1;
 	graph_p->bfs.queue_tmp[graph_p->bfs.q_p1] = point;
 	graph_p->bfs.q_p1 ++;
+	graph_p->bfs.searched++;
 
 	while(graph_p->bfs.queue_tmp[graph_p->bfs.q_p2] != -1){
 		tmp = graph_p->bfs.queue_tmp[graph_p->bfs.q_p2];
 		graph_p->bfs.q_p2 ++;
 		for(i = 0; graph_p->queue[tmp][i] != -1; i++){
 			if(graph_p->bfs.marked[graph_p->queue[tmp][i]] == -1){
-				
-				bfs(graph_p, graph_p->queue[tmp][i]);
+				graph_p->bfs.marked[graph_p->queue[tmp][i]] = 1;
+				graph_p->bfs.queue_tmp[graph_p->bfs.q_p1] = graph_p->queue[tmp][i];
+				graph_p->bfs.q_p1 ++;
+				graph_p->bfs.searched++;
 			}
 		}
 	}
-	graph_p->bfs.searched++;
+
+	
 }
 
 static int is_connected(graph *graph_p, int point1, int point2)
