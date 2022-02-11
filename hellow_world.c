@@ -172,8 +172,9 @@ int main()
 	heap_test();
 	red_black_tree_test();
 	union_find();
-	#endif
 	graph_test();
+	#endif
+	top_logic_test();
 	return 0;
 }
 
