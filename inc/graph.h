@@ -28,6 +28,18 @@ typedef struct graph_struct{
 }graph;
 
 
+typedef struct edge_struct{
+	int v;
+	int w;
+	int wright;
+}Edge;
+
+typedef struct graph_weighted_struct{
+	int points;
+	int edges;
+	struct edge_struct edge_queue[100][100];
+}graph_weighted;
+
 
 void graph_test(void);
 void top_logic_test(void);

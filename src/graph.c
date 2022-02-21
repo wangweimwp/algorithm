@@ -234,3 +234,96 @@ void top_logic_test(void)
 	}
 	printf("\n");
 }
+
+/***********************加权无向图****************************************/
+
+static inline int either(Edge *edge)
+{
+	return edge->v;
+}
+static inline int other(Edge *edge, int point)
+{
+	return edge->v == point? edge->w : edge->v;
+}
+/*比较规则*/
+static int compare_to(Edge *edge1, Edge *edge2)
+{
+	if(edge1->wright > edge2->wright){
+		return 1;
+	}else if(edge1->weight > edge2->weight){
+		return -1;
+	}else{
+		return 0;
+	}
+}
+
+
+void graph_weighted_init(graph_weighted *graph, int point)
+{
+	int i, j;
+	graph->points = point;
+	graph->edges = 0;
+	for(i = 0; i < 100; i++){
+		for(j = 0; j < 100; j++){
+			graph->edge_queue[i][j].v = -1;
+			graph->edge_queue[i][j].w = -1;
+			graph->edge_queue[i][j].weight = -1;
+		}
+	}
+
+	return;
+}
+
+void add_edge_gra_weighted(graph_weighted *graph, Edge *edge)
+{
+	int v, w;
+	int i;
+	v = either(edge);
+	w = other(edge, v);
+
+	for(i = 0; i < graph.points; i ++){
+		if(graph->edge_queue[v][i].v == -1)
+			break;
+	}
+	graph->edge_queue[v][i].v = v;	
+	graph->edge_queue[v][i].w = w;
+	graph->edge_queue[v][i].weight = edge.wright;
+
+	for(i = 0; i < graph.points; i ++){
+		if(graph->edge_queue[w][i].v == -1)
+			break;
+	}
+	graph->edge_queue[w][i].v = v;	
+	graph->edge_queue[w][i].w = w;
+	graph->edge_queue[w][i].weight = edge.wright;
+
+	graph->edges++;
+	return;
+}
+
+void pri_MST(graph_weighted *graph)
+{
+	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
+	Edge edges[100];
+	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
+	int weights[100];
+	/*索引代表顶点，存储当前顶点是否在树中*/
+	int mark[100];
+	/*存放树中顶点与非树中顶点之间的有效横切边*/
+	int index_pri_queue[100];
+
+	int i;
+	for(i = 0; i < 100; i++){
+		edges[i].v = -1;
+		edges[i].w = -1;
+		edges[i].weight = -1;
+		weights[i] = -1;
+		mark[i] = -1;
+		index_pri_queue[i] = -1;
+	}
+
+	
+	
+}
+
+
