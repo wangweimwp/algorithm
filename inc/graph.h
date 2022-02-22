@@ -43,4 +43,6 @@ typedef struct graph_weighted_struct{
 
 void graph_test(void);
 void top_logic_test(void);
+void pri_MST_test(void);
+
 #endif

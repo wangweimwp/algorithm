@@ -281,21 +281,16 @@ void add_edge_gra_weighted(graph_weighted *graph, Edge *edge)
 	v = either(edge);
 	w = other(edge, v);
 
-	for(i = 0; i < graph.points; i ++){
-		if(graph->edge_queue[v][i].v == -1)
-			break;
-	}
-	graph->edge_queue[v][i].v = v;	
+	for(i = 0; graph->edge_queue[v][i].v != -1; i ++){}
+	printf("v = %d w = %d weight = %d i = %d\n", v, w, edge->weight, i);
+	graph->edge_queue[v][i].v = v;
 	graph->edge_queue[v][i].w = w;
-	graph->edge_queue[v][i].weight = edge.wright;
+	graph->edge_queue[v][i].weight = edge->weight;
 
-	for(i = 0; i < graph.points; i ++){
-		if(graph->edge_queue[w][i].v == -1)
-			break;
-	}
+	for(i = 0; graph->edge_queue[w][i].v != -1; i ++){}
 	graph->edge_queue[w][i].v = v;	
 	graph->edge_queue[w][i].w = w;
-	graph->edge_queue[w][i].weight = edge.wright;
+	graph->edge_queue[w][i].weight = edge->weight;
 
 	graph->edges++;
 	return;
@@ -307,19 +302,19 @@ static int queue_is_empty(int *queue, int size)
 {
 	int i;
 	for(i = 0; i < size; i++){
-		if(queue[i]!= -1)
-			return 0
+		if(queue[i] != -1)
+			return 0;
 	}
-	return 1
+	return 1;
 }
 
 //删除队列中最小的元素，并返回对应的索引值
 static int del_return_nim_index(int *queue, int size)
 {
 	int i;
-	int min = -1, index_min = -1;
+	int min = -1, index_min = 0;
 	for(i = 0; i < size; i ++){
-		if(queue[i] < min){
+		if((queue[i] < min) && (queue[i])){
 			min = queue[i];
 			index_min = i;
 		}
@@ -347,7 +342,7 @@ void pri_MST(graph_weighted *graph)
 		edges[i].v = -1;
 		edges[i].w = -1;
 		edges[i].weight = -1;
-		dist_to[i] = -1;
+		dist_to[i] = 1000;
 		mark[i] = -1;
 		index_pri_queue[i] = -1;
 	}
@@ -358,12 +353,13 @@ void pri_MST(graph_weighted *graph)
 
 	while(!queue_is_empty(index_pri_queue, graph->points)){
 		v = del_return_nim_index(index_pri_queue, graph->points);
-
+		printf("v = %d\n", v);
 		//将最小横切边对应的顶点添加到最小生成树中
 		mark[v] = 1;
 		//遍历顶点v的邻接表
 		for(i =0; graph->edge_queue[v][i].v != -1; i++){
-			w = other(&graph->edge_queue[v][i], v); //回去另外一个顶点
+			w = other(&graph->edge_queue[v][i], v); //获取另外一个顶点
+			printf("w = %d\n", w);
 
 			if(mark[w] == 1){//顶点w已经在最小生成树中
 				continue;
@@ -377,14 +373,57 @@ void pri_MST(graph_weighted *graph)
 
 
 				index_pri_queue[w] = graph->edge_queue[v][i].weight;
+				printf("dist_to[%d] = %d"
+					"index_pri_queue[%d] = %d\n",
+					w, dist_to[w], w, index_pri_queue[w]);
 				
 			}
-			
 		}
+	}
 
+	for(i = 0; i < 100; i++){
+		if(edges[i].v != -1){
+			printf(" %d : edge 	v = %d 	w = %d 	weight = %d\n");
+		}
+	}
+	
+}
+
+
+void pri_MST_test(void)
+{
+	Edge edges[16] = {0};
+	graph_weighted graph;
+	int i;
+
+	graph_weighted_init(&graph, 8);
+	edges[0].v = 4; edges[0].w = 5; edges[0].weight = 35;
+	edges[1].v = 4; edges[1].w = 7; edges[1].weight = 37;
+	edges[2].v = 5; edges[2].w = 7; edges[2].weight = 28;
+	edges[3].v = 0; edges[3].w = 7; edges[3].weight = 16;
+	edges[4].v = 1; edges[4].w = 5; edges[4].weight = 32;
+	edges[5].v = 0; edges[5].w = 4; edges[5].weight = 38;
+	edges[6].v = 2; edges[6].w = 3; edges[6].weight = 17;
+	edges[7].v = 1; edges[7].w = 7; edges[7].weight = 19;
+	edges[8].v = 0; edges[8].w = 2; edges[8].weight = 26;
+	edges[9].v = 1; edges[9].w = 2; edges[9].weight = 36;
+	edges[10].v = 1; edges[10].w = 3; edges[10].weight = 29;
+	edges[11].v = 2; edges[11].w = 7; edges[11].weight = 34;
+	edges[12].v = 6; edges[12].w = 2; edges[12].weight = 40;
+	edges[13].v = 3; edges[13].w = 6; edges[13].weight = 52;
+	edges[14].v = 6; edges[14].w = 0; edges[14].weight = 58;
+	edges[15].v = 6; edges[15].w = 4; edges[15].weight = 93;
 
 	
+
+	for(i = 0; i < 16; i++){
+		add_edge_gra_weighted(&graph, &edges[i]);
 	}
+
+	printf("edges in graph is %d \n", graph.edges);
+
+	pri_MST(&graph);
+
 	
 	
 }

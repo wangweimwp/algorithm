@@ -173,8 +173,9 @@ int main()
 	red_black_tree_test();
 	union_find();
 	graph_test();
-	#endif
 	top_logic_test();
+	#endif
+	pri_MST_test();
 	return 0;
 }
 
