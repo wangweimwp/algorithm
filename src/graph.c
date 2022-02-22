@@ -248,7 +248,7 @@ static inline int other(Edge *edge, int point)
 /*比较规则*/
 static int compare_to(Edge *edge1, Edge *edge2)
 {
-	if(edge1->wright > edge2->wright){
+	if(edge1->weight > edge2->weight){
 		return 1;
 	}else if(edge1->weight > edge2->weight){
 		return -1;
@@ -301,12 +301,42 @@ void add_edge_gra_weighted(graph_weighted *graph, Edge *edge)
 	return;
 }
 
+
+//返回1  表示队列空
+static int queue_is_empty(int *queue, int size)
+{
+	int i;
+	for(i = 0; i < size; i++){
+		if(queue[i]!= -1)
+			return 0
+	}
+	return 1
+}
+
+//删除队列中最小的元素，并返回对应的索引值
+static int del_return_nim_index(int *queue, int size)
+{
+	int i;
+	int min = -1, index_min = -1;
+	for(i = 0; i < size; i ++){
+		if(queue[i] < min){
+			min = queue[i];
+			index_min = i;
+		}
+	}
+	queue[index_min] = -1;
+	return index_min;
+}
+
+
 void pri_MST(graph_weighted *graph)
 {
+	int v, w;
+
 	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
 	Edge edges[100];
-	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
-	int weights[100];
+	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边的权重*/
+	int dist_to[100];
 	/*索引代表顶点，存储当前顶点是否在树中*/
 	int mark[100];
 	/*存放树中顶点与非树中顶点之间的有效横切边*/
@@ -317,11 +347,44 @@ void pri_MST(graph_weighted *graph)
 		edges[i].v = -1;
 		edges[i].w = -1;
 		edges[i].weight = -1;
-		weights[i] = -1;
+		dist_to[i] = -1;
 		mark[i] = -1;
 		index_pri_queue[i] = -1;
 	}
 
+	//顶点0进入最小生成树
+	dist_to[0] = 0;
+	index_pri_queue[0] = 0;
+
+	while(!queue_is_empty(index_pri_queue, graph->points)){
+		v = del_return_nim_index(index_pri_queue, graph->points);
+
+		//将最小横切边对应的顶点添加到最小生成树中
+		mark[v] = 1;
+		//遍历顶点v的邻接表
+		for(i =0; graph->edge_queue[v][i].v != -1; i++){
+			w = other(&graph->edge_queue[v][i], v); //回去另外一个顶点
+
+			if(mark[w] == 1){//顶点w已经在最小生成树中
+				continue;
+			}
+			//树种没有顶点w，且顶点w到最小生成树的权重比之前的值更小，更新数据
+			if(dist_to[w] > graph->edge_queue[v][i].weight){
+				edges[w].v = graph->edge_queue[v][i].v;
+				edges[w].w = graph->edge_queue[v][i].w;
+				edges[w].weight = graph->edge_queue[v][i].weight;
+				dist_to[w] = graph->edge_queue[v][i].weight;
+
+
+				index_pri_queue[w] = graph->edge_queue[v][i].weight;
+				
+			}
+			
+		}
+
+
+	
+	}
 	
 	
 }

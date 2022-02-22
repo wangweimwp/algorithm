@@ -31,7 +31,7 @@ typedef struct graph_struct{
 typedef struct edge_struct{
 	int v;
 	int w;
-	int wright;
+	int weight;
 }Edge;
 
 typedef struct graph_weighted_struct{
