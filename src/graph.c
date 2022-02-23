@@ -312,9 +312,9 @@ static int queue_is_empty(int *queue, int size)
 static int del_return_nim_index(int *queue, int size)
 {
 	int i;
-	int min = -1, index_min = 0;
+	int min = 1000, index_min = 0;
 	for(i = 0; i < size; i ++){
-		if((queue[i] < min) && (queue[i])){
+		if((queue[i] < min) && (queue[i] > 0)){
 			min = queue[i];
 			index_min = i;
 		}
@@ -344,7 +344,7 @@ void pri_MST(graph_weighted *graph)
 		edges[i].weight = -1;
 		dist_to[i] = 1000;
 		mark[i] = -1;
-		index_pri_queue[i] = -1;
+		index_pri_queue[i] = 1000;
 	}
 
 	//顶点0进入最小生成树
@@ -383,7 +383,8 @@ void pri_MST(graph_weighted *graph)
 
 	for(i = 0; i < 100; i++){
 		if(edges[i].v != -1){
-			printf(" %d : edge 	v = %d 	w = %d 	weight = %d\n");
+			printf(" %d : edge 	v = %d 	w = %d 	weight = %d\n", 
+				i, edges[i].v, edges[i].w, edges[i].weight);
 		}
 	}
 	
