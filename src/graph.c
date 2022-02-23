@@ -330,8 +330,6 @@ void pri_MST(graph_weighted *graph)
 
 	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
 	Edge edges[100];
-	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边的权重*/
-	int dist_to[100];
 	/*索引代表顶点，存储当前顶点是否在树中*/
 	int mark[100];
 	/*存放树中顶点与非树中顶点之间的有效横切边*/
@@ -342,13 +340,11 @@ void pri_MST(graph_weighted *graph)
 		edges[i].v = -1;
 		edges[i].w = -1;
 		edges[i].weight = -1;
-		dist_to[i] = 1000;
 		mark[i] = -1;
-		index_pri_queue[i] = 1000;
+		index_pri_queue[i] = -1;
 	}
 
 	//顶点0进入最小生成树
-	dist_to[0] = 0;
 	index_pri_queue[0] = 0;
 
 	while(!queue_is_empty(index_pri_queue, graph->points)){
@@ -365,17 +361,14 @@ void pri_MST(graph_weighted *graph)
 				continue;
 			}
 			//树种没有顶点w，且顶点w到最小生成树的权重比之前的值更小，更新数据
-			if(dist_to[w] > graph->edge_queue[v][i].weight){
+			if((index_pri_queue[w] > graph->edge_queue[v][i].weight) || 
+				(index_pri_queue[w] < 0)){//队列中w顶点出权重不是最小或者无数据
 				edges[w].v = graph->edge_queue[v][i].v;
 				edges[w].w = graph->edge_queue[v][i].w;
 				edges[w].weight = graph->edge_queue[v][i].weight;
-				dist_to[w] = graph->edge_queue[v][i].weight;
-
 
 				index_pri_queue[w] = graph->edge_queue[v][i].weight;
-				printf("dist_to[%d] = %d"
-					"index_pri_queue[%d] = %d\n",
-					w, dist_to[w], w, index_pri_queue[w]);
+				printf("index_pri_queue[%d] = %d\n", w, index_pri_queue[w]);
 				
 			}
 		}
