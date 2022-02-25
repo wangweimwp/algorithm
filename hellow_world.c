@@ -176,6 +176,7 @@ int main()
 	top_logic_test();
 	#endif
 	pri_MST_test();
+	kruskal_MST_test();
 	return 0;
 }
 

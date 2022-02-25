@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <malloc.h> 
 #include "graph.h"
+#include "union_find.h"
+
 
 
 static void graph_init(graph *graph_p, int point)
@@ -408,7 +410,6 @@ void pri_MST_test(void)
 	edges[14].v = 6; edges[14].w = 0; edges[14].weight = 58;
 	edges[15].v = 6; edges[15].w = 4; edges[15].weight = 93;
 
-	
 
 	for(i = 0; i < 16; i++){
 		add_edge_gra_weighted(&graph, &edges[i]);
@@ -418,8 +419,102 @@ void pri_MST_test(void)
 
 	pri_MST(&graph);
 
-	
-	
 }
+
+
+
+/*****************************kruskal 算法**********************************************/
+
+static int is_edge_empty(Edge *edges)
+{
+	int i;
+	for(i = 0; i < 100; i++){
+		if(edges[i].weight != -1){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+static int find_min_edg(Edge *edges)
+{
+	int i;
+	int min_index, min_weight;
+	min_weight = 1000;
+	min_index = -1;
+	for(i = 0; i < 100; i++){
+		if((edges[i].weight < min_weight) && (edges[i].weight > 0)){
+			min_weight = edges[i].weight;
+			min_index = i;
+		}
+	}
+	return min_index;
+}
+
+
+
+void kruskal_MST_test(void)
+{
+	graph_weighted graph;
+	
+	/*索引代表顶点，存储当前顶点到最小生成树之间的最短边*/
+	Edge edges_mst[100];
+	/*存放所有的边*/
+	Edge edges[100];
+	/*用于判断两个顶点是否在一棵树中，和将两个顶点合并到一个树中*/
+	UF uf_group;
+
+	int i, j;
+	int index;
+
+	printf("kruskal_MST_test\n");
+
+	for(i = 0 ; i < 100; i++){
+		edges_mst[i].v = -1;
+		edges_mst[i].w = -1;
+		edges_mst[i].weight = -1;
+		edges[i].v = -1;
+		edges[i].w = -1;
+		edges[i].weight = -1;
+	}
+	uf_init(&uf_group, graph.points);
+	
+	edges[0].v = 4; edges[0].w = 5; edges[0].weight = 35;
+	edges[1].v = 4; edges[1].w = 7; edges[1].weight = 37;
+	edges[2].v = 5; edges[2].w = 7; edges[2].weight = 28;
+	edges[3].v = 0; edges[3].w = 7; edges[3].weight = 16;
+	edges[4].v = 1; edges[4].w = 5; edges[4].weight = 32;
+	edges[5].v = 0; edges[5].w = 4; edges[5].weight = 38;
+	edges[6].v = 2; edges[6].w = 3; edges[6].weight = 17;
+	edges[7].v = 1; edges[7].w = 7; edges[7].weight = 19;
+	edges[8].v = 0; edges[8].w = 2; edges[8].weight = 26;
+	edges[9].v = 1; edges[9].w = 2; edges[9].weight = 36;
+	edges[10].v = 1; edges[10].w = 3; edges[10].weight = 29;
+	edges[11].v = 2; edges[11].w = 7; edges[11].weight = 34;
+	edges[12].v = 6; edges[12].w = 2; edges[12].weight = 40;
+	edges[13].v = 3; edges[13].w = 6; edges[13].weight = 52;
+	edges[14].v = 6; edges[14].w = 0; edges[14].weight = 58;
+	edges[15].v = 6; edges[15].w = 4; edges[15].weight = 93;
+
+	graph_weighted_init(&graph, 8);
+	for(i = 0; i < 16; i++){
+		add_edge_gra_weighted(&graph, &edges[i]);
+	}
+
+	while(!is_edge_empty(edges)){
+		index = find_min_edg(edges);
+		if(!is_connected_uf(&uf_group, edges[index].v, edges[index].w)){
+			union_group(&uf_group, edges[index].v, edges[index].w);
+			printf(" edge 	v = %d 	w = %d 	weight = %d\n", 
+			edges[index].v, edges[index].w, edges[index].weight);
+		}
+		edges[index].v = -1; edges[index].w = -1; edges[index].weight = -1;
+	
+	}
+	
+
+}
+
+
 
 
