@@ -156,7 +156,7 @@ int arry1[] = {8, 4, 11, 7, 20, 33, 6, 2, 9, 25};
 int main()
 {
 	int max = 0;
-
+	//测试向linux主线提交补丁
 	#if 0
 	max = func1(arry, 0, sizeof(arry) / 4);
 	printf("max = %d \n", max);
