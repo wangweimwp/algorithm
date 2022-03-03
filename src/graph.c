@@ -516,5 +516,40 @@ void kruskal_MST_test(void)
 }
 
 
+/********************************加权有向图最短路径***************************************************/
+
+static void graph_weighted_dic_init(graph_weighted_dic *graph_dic, int point)
+{
+	int i, j;
+	graph_dic->points = point;
+	graph_dic->edges = 0;
+	for(i = 0; i < 100; i++){
+		for(j = 0; j < 100; j++){
+			graph_dic->edge_queue[i][j].from = -1;
+			graph_dic->edge_queue[i][j].to = -1;
+			graph_dic->edge_queue[i][j].weight = -1;
+		}
+	}
+
+	return;
+}
+
+
+void add_edge_gra_weighted(graph_weighted_dic *graph_dic, Edge_dic *edge)
+{
+	int from, to;
+	int i;
+	from = edge->from;
+	to = edge->to;
+
+	for(i = 0; graph_dic->edge_queue[from][i].from != -1; i ++){}
+	printf("v = %d w = %d weight = %d i = %d\n", from, to, edge->weight, i);
+	graph_dic->edge_queue[from][i].from = from;
+	graph_dic->edge_queue[from][i].to = to;
+	graph_dic->edge_queue[from][i].weight = edge->weight;
+
+	graph_dic->edges++;
+	return;
+}
 
 

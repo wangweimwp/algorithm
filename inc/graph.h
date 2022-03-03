@@ -41,6 +41,21 @@ typedef struct graph_weighted_struct{
 }graph_weighted;
 
 
+typedef struct edge_dic_struct{
+	int from;
+	int to;
+	int weight;
+}Edge_dic;
+
+
+typedef struct graph_weighted_dic_struct{
+	int points;
+	int edges;
+	struct edge_dic_struct edge_queue[100][100];
+}graph_weighted_dic;
+
+
+
 void graph_test(void);
 void top_logic_test(void);
 void pri_MST_test(void);
