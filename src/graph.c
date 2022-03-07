@@ -562,6 +562,8 @@ void pri_dijkstra(graph_weighted_dic *graph_dic, int start)
 	Edge_dic edges_dic[100];
 	/*存放树中顶点与非树中顶点之间的有效横切边*/
 	int index_pri_queue[100];
+	/*存放起点到当前顶点的最短距离*/
+	int dist_to[100];
 
 	int i;
 
@@ -569,34 +571,45 @@ void pri_dijkstra(graph_weighted_dic *graph_dic, int start)
 		edges_dic[i].from = -1;
 		edges_dic[i].to = -1;
 		edges_dic[i].weight = -1;
+		dist_to[i] = -1;
 		index_pri_queue[i] = -1;
 	}
 
 	/*起点进入最小路径树*/
 	index_pri_queue[start] = 0;
+	dist_to[start] = 0;
 
 	while(!queue_is_empty(index_pri_queue, graph_dic->points)){
 		from = del_return_nim_index(index_pri_queue, graph_dic->points);
+		printf("del %d\n", from);
 
 		for(i =0; graph_dic->edge_queue[from][i].from != -1; i++){
 			to = graph_dic->edge_queue[from][i].to; //获取这条边的终点
-			printf("to = %d\n", to);
+			printf("from = %d, to = %d\n", from, to);
 
 			//起点到顶点to的距离，大于起点到from + from到to的距离
-			if((index_pri_queue[to] > index_pri_queue[from] + graph_dic->edge_queue[from][i].weight) || 
-				(index_pri_queue[to] < 0)){//队列中to顶点处权重不是最小或者无数据
+			if((dist_to[to] > dist_to[from] + graph_dic->edge_queue[from][i].weight) || 
+				(dist_to[to] < 0)){//队列中to顶点处权重不是最小或者无数据
 				edges_dic[to].from = graph_dic->edge_queue[from][i].from;
 				edges_dic[to].to = graph_dic->edge_queue[from][i].to;
 				edges_dic[to].weight = graph_dic->edge_queue[from][i].weight;
 
-				if(index_pri_queue[from] == -1)
-					index_pri_queue[from] = 0;
+				if(index_pri_queue[to] == -1)
+					index_pri_queue[to] = 0;
+				if(dist_to[to] == -1)
+					dist_to[to] = 0;
 
-				index_pri_queue[to] = index_pri_queue[from] + graph_dic->edge_queue[from][i].weight;
+				dist_to[to] = dist_to[from] + graph_dic->edge_queue[from][i].weight;
+				index_pri_queue[to] = dist_to[from] + graph_dic->edge_queue[from][i].weight;
 				printf("index_pri_queue[%d] = %d\n", to, index_pri_queue[to]);
 				
 			}
 		}
+
+		for(i = 0; i < 8; i++){
+			printf("%d ", index_pri_queue[i]);
+		}
+		printf("\n");
 	}
 
 	for(i = 0; i < 100; i++){
