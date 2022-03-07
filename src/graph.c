@@ -362,9 +362,9 @@ void pri_MST(graph_weighted *graph)
 			if(mark[w] == 1){//顶点w已经在最小生成树中
 				continue;
 			}
-			//树种没有顶点w，且顶点w到最小生成树的权重比之前的值更小，更新数据
+			//树中没有顶点w，且顶点w到最小生成树的权重比之前的值更小，更新数据
 			if((index_pri_queue[w] > graph->edge_queue[v][i].weight) || 
-				(index_pri_queue[w] < 0)){//队列中w顶点出权重不是最小或者无数据
+				(index_pri_queue[w] < 0)){//队列中w顶点处权重不是最小或者无数据
 				edges[w].v = graph->edge_queue[v][i].v;
 				edges[w].w = graph->edge_queue[v][i].w;
 				edges[w].weight = graph->edge_queue[v][i].weight;
@@ -535,7 +535,7 @@ static void graph_weighted_dic_init(graph_weighted_dic *graph_dic, int point)
 }
 
 
-void add_edge_gra_weighted(graph_weighted_dic *graph_dic, Edge_dic *edge)
+void add_edge_gra_weighted_dic(graph_weighted_dic *graph_dic, Edge_dic *edge)
 {
 	int from, to;
 	int i;
@@ -543,7 +543,7 @@ void add_edge_gra_weighted(graph_weighted_dic *graph_dic, Edge_dic *edge)
 	to = edge->to;
 
 	for(i = 0; graph_dic->edge_queue[from][i].from != -1; i ++){}
-	printf("v = %d w = %d weight = %d i = %d\n", from, to, edge->weight, i);
+	printf("from = %d to = %d weight = %d i = %d\n", from, to, edge->weight, i);
 	graph_dic->edge_queue[from][i].from = from;
 	graph_dic->edge_queue[from][i].to = to;
 	graph_dic->edge_queue[from][i].weight = edge->weight;
@@ -552,4 +552,93 @@ void add_edge_gra_weighted(graph_weighted_dic *graph_dic, Edge_dic *edge)
 	return;
 }
 
+
+
+void pri_dijkstra(graph_weighted_dic *graph_dic, int start)
+{
+	int from, to;
+
+	/*索引代表顶点，存储起点到最小短路劲树之间的最短边*/
+	Edge_dic edges_dic[100];
+	/*存放树中顶点与非树中顶点之间的有效横切边*/
+	int index_pri_queue[100];
+
+	int i;
+
+	for(i = 0; i < 100; i++){
+		edges_dic[i].from = -1;
+		edges_dic[i].to = -1;
+		edges_dic[i].weight = -1;
+		index_pri_queue[i] = -1;
+	}
+
+	/*起点进入最小路径树*/
+	index_pri_queue[start] = 0;
+
+	while(!queue_is_empty(index_pri_queue, graph_dic->points)){
+		from = del_return_nim_index(index_pri_queue, graph_dic->points);
+
+		for(i =0; graph_dic->edge_queue[from][i].from != -1; i++){
+			to = graph_dic->edge_queue[from][i].to; //获取这条边的终点
+			printf("to = %d\n", to);
+
+			//起点到顶点to的距离，大于起点到from + from到to的距离
+			if((index_pri_queue[to] > index_pri_queue[from] + graph_dic->edge_queue[from][i].weight) || 
+				(index_pri_queue[to] < 0)){//队列中to顶点处权重不是最小或者无数据
+				edges_dic[to].from = graph_dic->edge_queue[from][i].from;
+				edges_dic[to].to = graph_dic->edge_queue[from][i].to;
+				edges_dic[to].weight = graph_dic->edge_queue[from][i].weight;
+
+				if(index_pri_queue[from] == -1)
+					index_pri_queue[from] = 0;
+
+				index_pri_queue[to] = index_pri_queue[from] + graph_dic->edge_queue[from][i].weight;
+				printf("index_pri_queue[%d] = %d\n", to, index_pri_queue[to]);
+				
+			}
+		}
+	}
+
+	for(i = 0; i < 100; i++){
+		if(edges_dic[i].from != -1){
+			printf(" %d : edge 	from = %d 	to = %d 	weight = %d\n", 
+				i, edges_dic[i].from, edges_dic[i].to, edges_dic[i].weight);
+		}
+	}
+	
+}
+
+void pri_dijkstra_test(void)
+{
+	Edge_dic edges_dic[15] = {0};
+	graph_weighted_dic graph_dic;
+	int i;
+
+	graph_weighted_dic_init(&graph_dic, 8);
+	edges_dic[0].from = 4; edges_dic[0].to = 5; edges_dic[0].weight = 35;
+	edges_dic[1].from = 5; edges_dic[1].to = 4; edges_dic[1].weight = 35;
+	edges_dic[2].from = 4; edges_dic[2].to = 7; edges_dic[2].weight = 37;
+	edges_dic[3].from = 5; edges_dic[3].to = 7; edges_dic[3].weight = 28;
+	edges_dic[4].from = 7; edges_dic[4].to = 5; edges_dic[4].weight = 28;
+	edges_dic[5].from = 5; edges_dic[5].to = 1; edges_dic[5].weight = 32;
+	edges_dic[6].from = 0; edges_dic[6].to = 4; edges_dic[6].weight = 38;
+	edges_dic[7].from = 0; edges_dic[7].to = 2; edges_dic[7].weight = 26;
+	edges_dic[8].from = 7; edges_dic[8].to = 3; edges_dic[8].weight = 39;
+	edges_dic[9].from = 1; edges_dic[9].to = 3; edges_dic[9].weight = 29;
+	edges_dic[10].from = 2; edges_dic[10].to = 7; edges_dic[10].weight = 34;
+	edges_dic[11].from = 6; edges_dic[11].to = 2; edges_dic[11].weight = 40;
+	edges_dic[12].from = 3; edges_dic[12].to = 6; edges_dic[12].weight = 52;
+	edges_dic[13].from = 6; edges_dic[13].to = 0; edges_dic[13].weight = 58;
+	edges_dic[14].from = 6; edges_dic[14].to = 4; edges_dic[14].weight = 93;
+
+
+	for(i = 0; i < 15; i++){
+		add_edge_gra_weighted_dic(&graph_dic, &edges_dic[i]);
+	}
+
+	printf("edges in graph is %d \n", graph_dic.edges);
+
+	pri_dijkstra(&graph_dic, 0);
+
+}
 

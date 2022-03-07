@@ -157,6 +157,7 @@ int main()
 {
 	int max = 0;
 	//测试向linux主线提交补丁
+	//测试向linux主线提交补丁2
 	#if 0
 	max = func1(arry, 0, sizeof(arry) / 4);
 	printf("max = %d \n", max);
@@ -174,9 +175,11 @@ int main()
 	union_find();
 	graph_test();
 	top_logic_test();
-	#endif
+
 	pri_MST_test();
 	kruskal_MST_test();
+	#endif
+	pri_dijkstra_test();
 	return 0;
 }
 
